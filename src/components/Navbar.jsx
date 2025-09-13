@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const navigation = [
     { name: 'Beranda', href: '/' },
-    { name: 'Tentang', href: '/tentang' },
+    { name: 'Tentang Kami', href: '/tentang' },
     { name: 'Galeri', href: '/galeri' },
     { name: 'Biji Kopi', href: '/biji-kopi' },
     { name: 'Menu', href: '/menu' },
