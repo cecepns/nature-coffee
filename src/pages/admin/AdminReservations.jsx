@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { 
   Calendar,
@@ -6,9 +6,7 @@ import {
   Users,
   Phone,
   Mail,
-  MapPin,
   Search,
-  Filter,
   CheckCircle,
   XCircle,
   AlertCircle
@@ -39,14 +37,16 @@ const AdminReservations = () => {
     pending: 'bg-yellow-100 text-yellow-800',
     confirmed: 'bg-green-100 text-green-800',
     cancelled: 'bg-red-100 text-red-800',
-    completed: 'bg-blue-100 text-blue-800'
+    completed: 'bg-blue-100 text-blue-800',
+    default: 'bg-gray-100 text-gray-800'
   };
 
   const statusIcons = {
     pending: AlertCircle,
     confirmed: CheckCircle,
     cancelled: XCircle,
-    completed: CheckCircle
+    completed: CheckCircle,
+    default: AlertCircle
   };
 
   useEffect(() => {
@@ -270,7 +270,7 @@ const AdminReservations = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredReservations.map((reservation) => {
-                    const StatusIcon = statusIcons[reservation.status];
+                    const StatusIcon = statusIcons[reservation.status] || statusIcons.default;
                     return (
                       <tr key={reservation.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -308,8 +308,8 @@ const AdminReservations = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[reservation.status]}`}>
-                            <StatusIcon size={12} className="mr-1" />
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[reservation.status] || statusColors.default}`}>
+                            {StatusIcon && <StatusIcon size={12} className="mr-1" />}
                             {statusOptions.find(s => s.value === reservation.status)?.label}
                           </span>
                         </td>

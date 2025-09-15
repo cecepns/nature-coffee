@@ -1,20 +1,29 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Star, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import apiService from '../utils/api';
 
 const CoffeeBeansPage = () => {
   const [coffeeBeans, setCoffeeBeans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [settings, setSettings] = useState({ phone: '' });
+  const itemsPerPage = 6;
 
   useEffect(() => {
-    const fetchCoffeeBeans = async () => {
+    const fetchData = async () => {
       try {
-        const response = await apiService.coffeeBeans.getAllPublic();
-        setCoffeeBeans(response.data || []);
+        // Fetch coffee beans and settings in parallel
+        const [coffeeBeansResponse, settingsResponse] = await Promise.all([
+          apiService.coffeeBeans.getAllPublic(200),
+          apiService.settings.get()
+        ]);
+        
+        setCoffeeBeans(coffeeBeansResponse.data || []);
+        setSettings(settingsResponse.data || { phone: '' });
       } catch (error) {
-        console.error('Error fetching coffee beans:', error);
+        console.error('Error fetching data:', error);
         // Set sample data for demo
         setCoffeeBeans([
           { 
@@ -83,7 +92,7 @@ const CoffeeBeansPage = () => {
       }
     };
 
-    fetchCoffeeBeans();
+    fetchData();
   }, []);
 
   const sampleImages = [
@@ -94,6 +103,56 @@ const CoffeeBeansPage = () => {
     'https://images.pexels.com/photos/1444416/pexels-photo-1444416.jpeg',
     'https://images.pexels.com/photos/2711959/pexels-photo-2711959.jpeg',
   ];
+
+  // Function to clean phone number and create WhatsApp URL
+  const createWhatsAppUrl = (phoneNumber) => {
+    if (!phoneNumber) return '#';
+    
+    // Remove spaces, dashes, and other non-numeric characters except +
+    const cleanPhone = phoneNumber.replace(/[\s\-()]/g, '');
+    
+    // Create WhatsApp URL
+    return `https://wa.me/${cleanPhone}`;
+  };
+
+  // Function to handle order button click
+  const handleOrder = (bean) => {
+    const message = `Halo, saya tertarik untuk memesan ${bean.name} dengan harga Rp ${Math.floor(bean.price).toLocaleString('id-ID').replace(/,/g, '.')}. Apakah masih tersedia?`;
+    const whatsappUrl = createWhatsAppUrl(settings.phone);
+    
+    if (whatsappUrl !== '#') {
+      const encodedMessage = encodeURIComponent(message);
+      window.open(`${whatsappUrl}?text=${encodedMessage}`, '_blank');
+    } else {
+      alert('Nomor WhatsApp belum dikonfigurasi. Silakan hubungi admin.');
+    }
+  };
+
+  // Pagination logic
+  const totalPages = Math.ceil(coffeeBeans.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentCoffeeBeans = coffeeBeans.slice(startIndex, endIndex);
+
+  // Pagination handlers
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   if (loading) {
     return (
@@ -127,7 +186,7 @@ const CoffeeBeansPage = () => {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {coffeeBeans.map((bean, index) => (
+            {currentCoffeeBeans.map((bean, index) => (
               <div 
                 key={bean.id}
                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
@@ -181,11 +240,14 @@ const CoffeeBeansPage = () => {
                   <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                     <div>
                       <span className="text-2xl font-bold text-primary">
-                        Rp {bean.price?.toLocaleString('id-ID') || '0'}
+                        Rp {bean.price ? Math.floor(bean.price).toLocaleString('id-ID').replace(/,/g, '.') : '0'}
                       </span>
                       {/* <span className="text-sm text-gray-500 ml-1">/ kg</span> */}
                     </div>
-                    <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors duration-200 flex items-center">
+                    <button 
+                      onClick={() => handleOrder(bean)}
+                      className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors duration-200 flex items-center"
+                    >
                       <ShoppingCart size={16} className="mr-2" />
                       Pesan
                     </button>
@@ -194,6 +256,85 @@ const CoffeeBeansPage = () => {
               </div>
             ))}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center mt-12 space-x-2" data-aos="fade-up">
+              {/* Previous Button */}
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  currentPage === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-700 hover:bg-primary hover:text-white shadow-md hover:shadow-lg'
+                }`}
+              >
+                <ChevronLeft size={20} className="mr-1" />
+                Sebelumnya
+              </button>
+
+              {/* Page Numbers */}
+              <div className="flex space-x-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current page
+                  const shouldShow = 
+                    page === 1 || 
+                    page === totalPages || 
+                    (page >= currentPage - 1 && page <= currentPage + 1);
+                  
+                  if (!shouldShow) {
+                    // Show ellipsis for gaps
+                    if (page === currentPage - 2 || page === currentPage + 2) {
+                      return (
+                        <span key={page} className="px-3 py-2 text-gray-400">
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  }
+
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                        currentPage === page
+                          ? 'bg-primary text-white shadow-lg'
+                          : 'bg-white text-gray-700 hover:bg-primary hover:text-white shadow-md hover:shadow-lg'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  currentPage === totalPages
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-700 hover:bg-primary hover:text-white shadow-md hover:shadow-lg'
+                }`}
+              >
+                Selanjutnya
+                <ChevronRight size={20} className="ml-1" />
+              </button>
+            </div>
+          )}
+
+          {/* Pagination Info */}
+          {coffeeBeans.length > 0 && (
+            <div className="text-center mt-6" data-aos="fade-up">
+              <p className="text-gray-600">
+                Menampilkan {startIndex + 1}-{Math.min(endIndex, coffeeBeans.length)} dari {coffeeBeans.length} produk
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -211,7 +352,7 @@ const CoffeeBeansPage = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a 
-                  href="https://wa.me/62XXXXXXXXX"
+                  href={createWhatsAppUrl(settings.phone)}
                   className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors duration-200"
                 >
                   Hubungi WhatsApp

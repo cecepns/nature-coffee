@@ -36,7 +36,7 @@ const AdminMenus = () => {
     is_available: true
   });
 
-  const categories = ['coffee', 'food', 'dessert', 'beverage'];
+  const categories = ['coffee', 'non-coffee', 'food', 'dessert', 'beverage'];
 
   useEffect(() => {
     fetchMenus();
@@ -257,7 +257,7 @@ const AdminMenus = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        Rp {menu.price.toLocaleString('id-ID')}
+                        Rp {Math.floor(menu.price).toLocaleString('id-ID').replace(/,/g, '.')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${

@@ -256,7 +256,7 @@ const AdminCoffeeBeans = () => {
                         {bean.weight}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        Rp {bean.price.toLocaleString('id-ID')}
+                        Rp {Math.floor(bean.price).toLocaleString('id-ID').replace(/,/g, '.')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${

@@ -165,7 +165,7 @@ const LandingPage = () => {
                   <p className="text-gray-600 mb-4 line-clamp-2">{item.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-2xl font-bold text-primary">
-                      Rp {item.price?.toLocaleString('id-ID') || '0'}
+                      Rp {item.price ? Math.floor(item.price).toLocaleString('id-ID').replace(/,/g, '.') : '0'}
                     </span>
                     <div className="flex items-center">
                       <Star className="text-yellow-400 fill-current" size={16} />
@@ -217,7 +217,7 @@ const LandingPage = () => {
                   <p className="text-gray-600 mb-4">{bean.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-2xl font-bold text-primary">
-                      Rp {bean.price?.toLocaleString('id-ID') || '0'}
+                      Rp {bean.price ? Math.floor(bean.price).toLocaleString('id-ID').replace(/,/g, '.') : '0'}
                     </span>
                     <span className="text-sm text-gray-500">per kg</span>
                   </div>

@@ -77,11 +77,11 @@ const Footer = () => {
             <div className="space-y-3 text-green-100">
               <div className="flex items-start">
                 <MapPin size={20} className="mt-1 mr-3 flex-shrink-0" />
-                <p>Jl. Pemuda 2 No.84, Temindung Permai, Kec. Sungai Pinang, Kota Samarinda, Kalimantan Timur 75119</p>
+                <p>{settings?.address || 'Jl. Pemuda 2 No.84, Temindung Permai, Kec. Sungai Pinang, Kota Samarinda, Kalimantan Timur 75119'}</p>
               </div>
               <div className="flex items-center">
                 <Phone size={20} className="mr-3" />
-                <span>+62 XXX-XXXX-XXXX</span>
+                <span>{settings?.phone || '+62 XXX-XXXX-XXXX'}</span>
               </div>
             </div>
           </div>
@@ -118,7 +118,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-green-700 mt-8 pt-8 text-center text-green-100">
-          <p>&copy; 2024 Nature Coffee. All rights reserved.</p>
+          <p>&copy; 2025 Nature Coffee. All rights reserved.</p>
         </div>
       </div>
     </footer>

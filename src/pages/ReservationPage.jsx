@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Calendar, Clock, Users, Phone, Mail, User } from 'lucide-react';
@@ -16,6 +16,27 @@ const ReservationPage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [settings, setSettings] = useState({
+    phone: '+62 XXX-XXXX-XXXX',
+    email: 'info@naturecoffee.com'
+  });
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const response = await apiService.settings.get();
+      setSettings({
+        phone: response.data.phone || '+62 XXX-XXXX-XXXX',
+        email: response.data.email || 'info@naturecoffee.com'
+      });
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      // Keep default values if API fails
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -257,14 +278,14 @@ const ReservationPage = () => {
                     <Phone size={18} className="mt-1 mr-3 text-primary flex-shrink-0" />
                     <div>
                       <p className="font-medium">Telepon</p>
-                      <p>+62 XXX-XXXX-XXXX</p>
+                      <p>{settings.phone}</p>
                     </div>
                   </div>
                   <div className="flex items-start">
                     <Mail size={18} className="mt-1 mr-3 text-primary flex-shrink-0" />
                     <div>
                       <p className="font-medium">Email</p>
-                      <p>info@naturecoffee.com</p>
+                      <p>{settings.email}</p>
                     </div>
                   </div>
                 </div>

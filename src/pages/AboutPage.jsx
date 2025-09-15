@@ -1,9 +1,31 @@
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Users, Award, Heart, Clock } from 'lucide-react';
-import AboutUs from '../assets/AboutUs.jpeg'
+import AboutUs from '../assets/AboutUs.jpeg';
+import apiService from '../utils/api';
 
 const AboutPage = () => {
+  const [aboutData, setAboutData] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAboutData();
+  }, []);
+
+  const fetchAboutData = async () => {
+    try {
+      setLoading(true);
+      const response = await apiService.settings.get();
+      setAboutData(response.data.about_us || '');
+    } catch (error) {
+      console.error('Error fetching about data:', error);
+      // Fallback to default content if API fails
+      setAboutData('Nature Coffee lahir dari kecintaan terhadap kopi Indonesia dan keinginan untuk menciptakan ruang yang nyaman bagi para pecinta kopi. Berlokasi di jantung kota Samarinda, kami hadir dengan konsep yang menggabungkan kualitas premium dengan suasana alami.');
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <Navbar />
@@ -30,23 +52,20 @@ const AboutPage = () => {
                 Tentang Kami
               </h2>
               <div className="space-y-4 text-gray-600 text-lg">
-                <p>
-                  Nature Coffee lahir dari kecintaan terhadap kopi Indonesia dan keinginan 
-                  untuk menciptakan ruang yang nyaman bagi para pecinta kopi. Berlokasi di 
-                  jantung kota Samarinda, kami hadir dengan konsep yang menggabungkan 
-                  kualitas premium dengan suasana alami.
-                </p>
-                <p>
-                  Sejak didirikan, kami berkomitmen untuk menyajikan kopi terbaik dari 
-                  petani lokal pilihan. Setiap cangkir kopi yang kami sajikan adalah hasil 
-                  dari proses seleksi ketat dan pengolahan yang penuh perhatian.
-                </p>
-                <p>
-                  Lebih dari sekadar tempat minum kopi, Nature Coffee adalah tempat 
-                  berkumpul, bekerja, dan menciptakan momen berharga bersama orang-orang 
-                  tercinta. Suasana hijau dan alami di cafe kami dirancang untuk memberikan 
-                  ketenangan di tengah hiruk pikuk kota.
-                </p>
+                {loading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    <span className="ml-3 text-gray-500">Memuat konten...</span>
+                  </div>
+                ) : aboutData ? (
+                  <div className="whitespace-pre-line">
+                    {aboutData}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 italic">
+                    Konten tentang kami sedang dalam proses pembaruan. Silakan kembali lagi nanti.
+                  </p>
+                )}
               </div>
             </div>
             
