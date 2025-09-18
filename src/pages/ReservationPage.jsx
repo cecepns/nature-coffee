@@ -65,13 +65,13 @@ const ReservationPage = () => {
       // Format reservation message
       const reservationMessage = `Halo, saya ingin membuat reservasi dengan detail sebagai berikut:
 
-👤 Nama: ${formData.name}
-📧 Email: ${formData.email}
-📱 Telepon: ${formData.phone}
-📅 Tanggal: ${formData.date}
-🕐 Waktu: ${formData.time}
-👥 Jumlah Tamu: ${formData.guests} orang
-📝 Catatan: ${formData.notes || 'Tidak ada'}
+ Nama: ${formData.name}
+ Email: ${formData.email}
+ Telepon: ${formData.phone}
+ Tanggal: ${formData.date}
+ Waktu: ${formData.time}
+ Jumlah Tamu: ${formData.guests} orang
+ Catatan: ${formData.notes || 'Tidak ada'}
 
 Mohon konfirmasi ketersediaan meja. Terima kasih!`;
 
