@@ -35,7 +35,7 @@ const AdminLayout = ({ children, title }) => {
     { name: 'Menu', href: '/admin/menu', icon: UtensilsCrossed },
     { name: 'Biji Kopi', href: '/admin/biji-kopi', icon: Coffee },
     { name: 'Galeri', href: '/admin/galeri', icon: Image },
-    { name: 'Reservasi', href: '/admin/reservasi', icon: Calendar },
+    // { name: 'Reservasi', href: '/admin/reservasi', icon: Calendar },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 

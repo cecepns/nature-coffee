@@ -67,20 +67,20 @@ const AdminDashboard = () => {
       color: 'bg-green-500',
       change: '+15%'
     },
-    {
-      title: 'Total Reservasi',
-      value: stats.totalReservations,
-      icon: Calendar,
-      color: 'bg-purple-500',
-      change: '+23%'
-    },
-    {
-      title: 'Reservasi Hari Ini',
-      value: stats.todayReservations,
-      icon: Users,
-      color: 'bg-red-500',
-      change: '+5%'
-    },
+    // {
+    //   title: 'Total Reservasi',
+    //   value: stats.totalReservations,
+    //   icon: Calendar,
+    //   color: 'bg-purple-500',
+    //   change: '+23%'
+    // },
+    // {
+    //   title: 'Reservasi Hari Ini',
+    //   value: stats.todayReservations,
+    //   icon: Users,
+    //   color: 'bg-red-500',
+    //   change: '+5%'
+    // },
     // {
     //   title: 'Pendapatan Bulan Ini',
     //   value: `Rp ${stats.monthlyRevenue.toLocaleString('id-ID')}`,

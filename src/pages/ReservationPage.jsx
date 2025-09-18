@@ -45,30 +45,67 @@ const ReservationPage = () => {
     });
   };
 
+  // Function to clean phone number and create WhatsApp URL
+  const createWhatsAppUrl = (phoneNumber) => {
+    if (!phoneNumber) return '#';
+    
+    // Remove spaces, dashes, and other non-numeric characters except +
+    const cleanPhone = phoneNumber.replace(/[\s\-()]/g, '');
+    
+    // Create WhatsApp URL
+    return `https://wa.me/${cleanPhone}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: '', text: '' });
 
     try {
-      await apiService.reservations.create(formData);
-      setMessage({ 
-        type: 'success', 
-        text: 'Reservasi berhasil dibuat! Kami akan menghubungi Anda untuk konfirmasi.' 
-      });
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        date: '',
-        time: '',
-        guests: '',
-        notes: ''
-      });
-    } catch (error) {
+      // Format reservation message
+      const reservationMessage = `Halo, saya ingin membuat reservasi dengan detail sebagai berikut:
+
+👤 Nama: ${formData.name}
+📧 Email: ${formData.email}
+📱 Telepon: ${formData.phone}
+📅 Tanggal: ${formData.date}
+🕐 Waktu: ${formData.time}
+👥 Jumlah Tamu: ${formData.guests} orang
+📝 Catatan: ${formData.notes || 'Tidak ada'}
+
+Mohon konfirmasi ketersediaan meja. Terima kasih!`;
+
+      const whatsappUrl = createWhatsAppUrl(settings.phone);
+      
+      if (whatsappUrl !== '#') {
+        const encodedMessage = encodeURIComponent(reservationMessage);
+        window.open(`${whatsappUrl}?text=${encodedMessage}`, '_blank');
+        
+        setMessage({ 
+          type: 'success', 
+          text: 'Membuka WhatsApp untuk mengirim reservasi...' 
+        });
+        
+        // Reset form after successful redirect
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          date: '',
+          time: '',
+          guests: '',
+          notes: ''
+        });
+      } else {
+        setMessage({ 
+          type: 'error', 
+          text: 'Nomor WhatsApp belum dikonfigurasi. Silakan hubungi admin.' 
+        });
+      }
+    } catch {
       setMessage({ 
         type: 'error', 
-        text: error.message || 'Terjadi kesalahan. Silakan coba lagi.' 
+        text: 'Terjadi kesalahan. Silakan coba lagi.' 
       });
     } finally {
       setLoading(false);
@@ -244,7 +281,7 @@ const ReservationPage = () => {
                   disabled={loading}
                   className="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Mengirim...' : 'Buat Reservasi'}
+                  {loading ? 'Membuka WhatsApp...' : 'Kirim via WhatsApp'}
                 </button>
               </form>
             </div>
@@ -298,7 +335,8 @@ const ReservationPage = () => {
                   <li>• Reservasi dapat dibuat minimal 1 hari sebelumnya</li>
                   <li>• Meja akan ditahan selama 15 menit setelah waktu reservasi</li>
                   <li>• Untuk grup lebih dari 10 orang, silakan hubungi langsung</li>
-                  <li>• Konfirmasi reservasi akan dikirim via WhatsApp/telepon</li>
+                  <li>• Reservasi akan dikirim langsung ke WhatsApp admin</li>
+                  <li>• Konfirmasi akan diberikan melalui WhatsApp</li>
                 </ul>
               </div>
             </div>
