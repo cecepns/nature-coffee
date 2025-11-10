@@ -4,16 +4,23 @@ import Footer from '../components/Footer';
 import { Calendar, Clock, Users, Phone, Mail, User } from 'lucide-react';
 import apiService from '../utils/api';
 
+const getTodayDate = () => {
+  const today = new Date();
+  const timezoneOffset = today.getTimezoneOffset();
+  today.setMinutes(today.getMinutes() - timezoneOffset);
+  return today.toISOString().split('T')[0];
+};
+
 const ReservationPage = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     name: '',
     email: '',
     phone: '',
-    date: '',
+    date: getTodayDate(),
     time: '',
     guests: '',
     notes: ''
-  });
+  }));
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [settings, setSettings] = useState({
@@ -91,7 +98,7 @@ Mohon konfirmasi ketersediaan meja. Terima kasih!`;
           name: '',
           email: '',
           phone: '',
-          date: '',
+          date: getTodayDate(),
           time: '',
           guests: '',
           notes: ''
@@ -127,8 +134,8 @@ Mohon konfirmasi ketersediaan meja. Terima kasih!`;
       <section className="pt-44 pb-12 bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center" data-aos="fade-up">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Reservasi Meja</h1>
-            <p className="text-xl text-green-100 max-w-3xl mx-auto">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">Reservasi Meja</h1>
+            <p className="text-base sm:text-lg text-green-100 max-w-3xl mx-auto">
               Pastikan meja Anda tersedia dengan melakukan reservasi terlebih dahulu. 
               Nikmati kopi premium dalam suasana yang nyaman
             </p>
@@ -216,7 +223,7 @@ Mohon konfirmasi ketersediaan meja. Terima kasih!`;
                       value={formData.date}
                       onChange={handleChange}
                       required
-                      min={new Date().toISOString().split('T')[0]}
+                      min={getTodayDate()}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
@@ -322,7 +329,16 @@ Mohon konfirmasi ketersediaan meja. Terima kasih!`;
                     <Mail size={18} className="mt-1 mr-3 text-primary flex-shrink-0" />
                     <div>
                       <p className="font-medium">Email</p>
-                      <p>{settings.email}</p>
+                      {settings.email ? (
+                        <a 
+                          href={`mailto:${settings.email}`}
+                          className="text-primary hover:underline"
+                        >
+                          {settings.email}
+                        </a>
+                      ) : (
+                        <span>info@naturecoffee.com</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -333,7 +349,7 @@ Mohon konfirmasi ketersediaan meja. Terima kasih!`;
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Catatan Penting</h3>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li>• Reservasi dapat dibuat minimal 1 hari sebelumnya</li>
-                  <li>• Meja akan ditahan selama 15 menit setelah waktu reservasi</li>
+                  <li>• Meja akan ditahan selama 30 menit dengan DP 30%</li>
                   <li>• Untuk grup lebih dari 10 orang, silakan hubungi langsung</li>
                   <li>• Reservasi akan dikirim langsung ke WhatsApp admin</li>
                   <li>• Konfirmasi akan diberikan melalui WhatsApp</li>

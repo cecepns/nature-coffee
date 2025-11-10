@@ -1,14 +1,34 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Coffee, Leaf, Users, Star } from 'lucide-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import apiService from '../utils/api';
 
+const HERO_DESCRIPTION = 'Datang bersama teman & rasakan nikmatnya secangkir kopi';
+
+const heroSlides = [
+  {
+    id: 1,
+    title: 'Dari setiap biji kopi, lahir rasa yang berbeda.',
+  },
+  {
+    id: 2,
+    title: 'Setiap tegukan membawa kisah yang bermakna.',
+  },
+  {
+    id: 3,
+    title: 'Kopi adalah cara kami membagi kehangatan.',
+  },
+];
+
 const LandingPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [coffeeBeans, setCoffeeBeans] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Scroll to top when component mounts
@@ -41,8 +61,6 @@ const LandingPage = () => {
           { id: 5, name: 'Java', price: 105000, image: null, description: 'Java premium beans' },
           { id: 6, name: 'Sumatra', price: 115000, image: null, description: 'Sumatra blend beans' },
         ]);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -63,26 +81,48 @@ const LandingPage = () => {
           }}
         ></div>
         
-        <div className="relative md:pt-24 z-10 max-w-4xl mx-auto px-4 text-center" data-aos="fade-up">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Nature Coffee
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-green-100">
-            Rasakan Kopi Premium di Suasana yang Alami dan Nyaman
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              to="/menu"
-              className="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition-colors duration-200"
+        <div className="relative md:pt-24 z-10 w-full px-4" data-aos="fade-up">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              autoplay={{ delay: 4500, disableOnInteraction: false }}
+              pagination={{ clickable: true }}
+              loop
+              style={{
+                '--swiper-theme-color': '#ffffff',
+                '--swiper-pagination-bullet-inactive-color': 'rgba(255, 255, 255, 0.35)',
+                '--swiper-pagination-bullet-inactive-opacity': '1',
+                '--swiper-pagination-bottom': '0px',
+              }}
+              className="max-w-3xl mx-auto"
             >
-              Lihat Menu
-            </Link>
-            <Link 
-              to="/reservasi"
-              className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary transition-colors duration-200"
-            >
-              Reservasi Sekarang
-            </Link>
+              {heroSlides.map((slide) => (
+                <SwiperSlide key={slide.id}>
+                  <div className="flex flex-col items-center justify-center min-h-[160px] sm:min-h-[180px] px-2 space-y-4">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold">
+                      {slide.title}
+                    </h1>
+                    <p className="text-lg sm:text-xl md:text-2xl text-green-100 leading-relaxed">
+                      {HERO_DESCRIPTION}
+                    </p>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                to="/menu"
+                className="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition-colors duration-200"
+              >
+                Lihat Menu
+              </Link>
+              <Link 
+                to="/reservasi"
+                className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary transition-colors duration-200"
+              >
+                Reservasi Sekarang
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -91,10 +131,10 @@ const LandingPage = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               Mengapa Memilih Nature Coffee?
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               Kami berkomitmen memberikan pengalaman kopi terbaik dengan bahan premium dan suasana yang nyaman
             </p>
           </div>
@@ -104,7 +144,7 @@ const LandingPage = () => {
               <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Coffee className="text-primary" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Kopi Premium</h3>
+              <h3 className="text-lg font-semibold mb-2 sm:text-xl">Kopi Premium</h3>
               <p className="text-gray-600">Biji kopi pilihan dari petani lokal terbaik dengan kualitas premium</p>
             </div>
 
@@ -112,7 +152,7 @@ const LandingPage = () => {
               <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Leaf className="text-primary" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Suasana Alami</h3>
+              <h3 className="text-lg font-semibold mb-2 sm:text-xl">Suasana Alami</h3>
               <p className="text-gray-600">Nikmati kopi di tengah suasana hijau dan alami yang menenangkan</p>
             </div>
 
@@ -120,7 +160,7 @@ const LandingPage = () => {
               <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="text-primary" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Pelayanan Ramah</h3>
+              <h3 className="text-lg font-semibold mb-2 sm:text-xl">Pelayanan Ramah</h3>
               <p className="text-gray-600">Tim barista profesional siap melayani dengan ramah dan berpengalaman</p>
             </div>
           </div>
@@ -132,8 +172,8 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12" data-aos="fade-up">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Menu Favorit</h2>
-              <p className="text-lg text-gray-600">Cicipi menu andalan kami yang selalu menjadi favorit</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">Menu Favorit</h2>
+              <p className="text-base sm:text-lg text-gray-600">Cicipi menu andalan kami yang selalu menjadi favorit</p>
             </div>
             <Link 
               to="/menu"
@@ -161,7 +201,7 @@ const LandingPage = () => {
                   }}
                 ></div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2">{item.name}</h3>
                   <p className="text-gray-600 mb-4 line-clamp-2">{item.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-2xl font-bold text-primary">
@@ -184,8 +224,8 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12" data-aos="fade-up">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Biji Kopi Premium</h2>
-              <p className="text-lg text-gray-600">Bawa pulang biji kopi berkualitas tinggi untuk dinikmati di rumah</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">Biji Kopi Premium</h2>
+              <p className="text-base sm:text-lg text-gray-600">Bawa pulang biji kopi berkualitas tinggi untuk dinikmati di rumah</p>
             </div>
             <Link 
               to="/biji-kopi"
@@ -213,7 +253,7 @@ const LandingPage = () => {
                   }}
                 ></div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{bean.name}</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2">{bean.name}</h3>
                   <p className="text-gray-600 mb-4">{bean.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-2xl font-bold text-primary">

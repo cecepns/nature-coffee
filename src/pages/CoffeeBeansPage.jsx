@@ -173,8 +173,8 @@ const CoffeeBeansPage = () => {
       <section className="pt-44 pb-12 bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center" data-aos="fade-up">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Biji Kopi Premium</h1>
-            <p className="text-xl text-green-100 max-w-3xl mx-auto">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">Biji Kopi Premium</h1>
+            <p className="text-base sm:text-lg text-green-100 max-w-3xl mx-auto">
               Koleksi biji kopi berkualitas tinggi dari berbagai daerah di Indonesia. 
               Pilih yang terbaik untuk dinikmati di rumah
             </p>

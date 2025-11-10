@@ -18,7 +18,6 @@ import AdminMenus from './pages/admin/AdminMenus';
 import AdminCoffeeBeans from './pages/admin/AdminCoffeeBeans';
 import AdminGallery from './pages/admin/AdminGallery';
 import AdminSettings from './pages/admin/AdminSettings';
-import AdminReservations from './pages/admin/AdminReservations';
 
 import './App.css';
 import ScrollToTop from './components/ScrollToTop';
@@ -53,7 +52,6 @@ function App() {
           <Route path="/admin/biji-kopi" element={<AdminCoffeeBeans />} />
           <Route path="/admin/galeri" element={<AdminGallery />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
-          <Route path="/admin/reservasi" element={<AdminReservations />} />
         </Routes>
       </div>
     </Router>
