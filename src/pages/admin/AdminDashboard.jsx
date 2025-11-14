@@ -167,14 +167,14 @@ const AdminDashboard = () => {
               <p className="text-sm text-gray-600">Upload foto terbaru</p>
             </a>
             
-            <a
+            {/* <a
               href="/admin/reservasi"
               className="bg-purple-50 hover:bg-purple-100 p-4 rounded-lg transition-colors duration-200"
             >
               <Calendar className="text-purple-600 mb-2" size={24} />
               <h4 className="font-medium text-gray-900">Reservasi</h4>
               <p className="text-sm text-gray-600">Lihat reservasi terbaru</p>
-            </a>
+            </a> */}
           </div>
         </div>
 
