@@ -25,7 +25,7 @@ const ReservationPage = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [settings, setSettings] = useState({
     phone: '+62 XXX-XXXX-XXXX',
-    email: 'info@naturecoffee.com'
+    email: 'naturecoffeeroastery@gmail.com'
   });
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const ReservationPage = () => {
       const response = await apiService.settings.get();
       setSettings({
         phone: response.data.phone || '+62 XXX-XXXX-XXXX',
-        email: response.data.email || 'info@naturecoffee.com'
+        email: response.data.email || 'naturecoffeeroastery@gmail.com'
       });
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -337,7 +337,7 @@ Mohon konfirmasi ketersediaan meja. Terima kasih!`;
                           {settings.email}
                         </a>
                       ) : (
-                        <span>info@naturecoffee.com</span>
+                        <span>naturecoffeeroastery@gmail.com</span>
                       )}
                     </div>
                   </div>
