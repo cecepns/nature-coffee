@@ -48,7 +48,8 @@ class ApiService {
   // Menu endpoints
   menu = {
     getAll: (page = 1, limit = 10) => this.request(`/menu?page=${page}&limit=${limit}`),
-    getAllPublic: (limit = null) => this.request(`/menu/public${limit ? `?limit=${limit}` : ''}`),
+    getAllPublic: (limit = null) => this.request(`/menu/public${limit ? `?limit=${limit}&favorites_only=true` : '?favorites_only=true'}`),
+    getAllPublicMenus: (limit = null) => this.request(`/menu/public${limit ? `?limit=${limit}&favorites_only=false` : '?favorites_only=false'}`),
     getById: (id) => this.request(`/menu/${id}`),
     create: (data) => this.request('/menu', {
       method: 'POST',

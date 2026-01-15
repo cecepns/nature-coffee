@@ -4,11 +4,7 @@ import {
   Plus, 
   Edit, 
   Trash2, 
-  Eye, 
-  EyeOff, 
-  Upload,
   Search,
-  Filter,
   X
 } from 'lucide-react';
 import apiService from '../../utils/api';
@@ -33,7 +29,8 @@ const AdminMenus = () => {
     price: '',
     category: 'coffee',
     image: '',
-    is_available: true
+    is_available: true,
+    is_favorite: false
   });
 
   const categories = ['coffee', 'non-coffee', 'food', 'dessert', 'beverage'];
@@ -94,7 +91,8 @@ const AdminMenus = () => {
         price: '',
         category: 'coffee',
         image: '',
-        is_available: true
+        is_available: true,
+        is_favorite: false
       });
       fetchMenus();
     } catch (error) {
@@ -110,7 +108,8 @@ const AdminMenus = () => {
       price: menu.price,
       category: menu.category,
       image: menu.image || '',
-      is_available: menu.is_available
+      is_available: menu.is_available,
+      is_favorite: menu.is_favorite || false
     });
     setShowModal(true);
   };
@@ -221,6 +220,9 @@ const AdminMenus = () => {
                       Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Favorit
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Aksi
                     </th>
                   </tr>
@@ -266,6 +268,15 @@ const AdminMenus = () => {
                             : 'bg-red-100 text-red-800'
                         }`}>
                           {menu.is_available ? 'Tersedia' : 'Tidak Tersedia'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          menu.is_favorite 
+                            ? 'bg-yellow-100 text-yellow-800' 
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {menu.is_favorite ? 'Favorit' : '-'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -428,6 +439,19 @@ const AdminMenus = () => {
                 />
                 <label htmlFor="is_available" className="ml-2 block text-sm text-gray-700">
                   Tersedia
+                </label>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="is_favorite"
+                  checked={formData.is_favorite}
+                  onChange={(e) => setFormData(prev => ({ ...prev, is_favorite: e.target.checked }))}
+                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                />
+                <label htmlFor="is_favorite" className="ml-2 block text-sm text-gray-700">
+                  Menu Favorit (ditampilkan di halaman utama)
                 </label>
               </div>
 

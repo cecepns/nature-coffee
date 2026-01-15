@@ -218,19 +218,31 @@ app.get('/api/menu', authenticateToken, (req, res) => {
 });
 
 // Get menu items for public (limited)
+// favorites_only=true: only return favorite menus (default for LandingPage)
+// favorites_only=false: return all available menus (for MenuPage)
 app.get('/api/menu/public', (req, res) => {
-  const { limit = 6 } = req.query;
+  const { limit = 6, favorites_only = 'true' } = req.query;
+  const isFavoritesOnly = favorites_only === 'true' || favorites_only === true;
   
-  db.query(
-    'SELECT * FROM menu WHERE is_available = true ORDER BY created_at DESC LIMIT ?',
-    [parseInt(limit)],
-    (err, results) => {
-      if (err) {
-        return res.status(500).json({ message: 'Database error', error: err });
-      }
-      res.json({ success: true, data: results });
+  let query;
+  let params;
+  
+  if (isFavoritesOnly) {
+    // Only return favorite menus
+    query = 'SELECT * FROM menu WHERE is_available = true AND is_favorite = true ORDER BY created_at DESC LIMIT ?';
+    params = [parseInt(limit)];
+  } else {
+    // Return all available menus
+    query = 'SELECT * FROM menu WHERE is_available = true ORDER BY created_at DESC LIMIT ?';
+    params = [parseInt(limit)];
+  }
+  
+  db.query(query, params, (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Database error', error: err });
     }
-  );
+    res.json({ success: true, data: results });
+  });
 });
 
 // Get single menu item
@@ -252,14 +264,14 @@ app.get('/api/menu/:id', (req, res) => {
 
 // Create menu item
 app.post('/api/menu', authenticateToken, (req, res) => {
-  const { name, description, price, category, image, is_available } = req.body;
+  const { name, description, price, category, image, is_available, is_favorite } = req.body;
 
   if (!name || !price) {
     return res.status(400).json({ message: 'Name and price are required' });
   }
 
-  const query = 'INSERT INTO menu (name, description, price, category, image, is_available) VALUES (?, ?, ?, ?, ?, ?)';
-  const values = [name, description || '', price, category || 'coffee', image || null, is_available !== undefined ? is_available : true];
+  const query = 'INSERT INTO menu (name, description, price, category, image, is_available, is_favorite) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const values = [name, description || '', price, category || 'coffee', image || null, is_available !== undefined ? is_available : true, is_favorite !== undefined ? is_favorite : false];
 
   db.query(query, values, (err, result) => {
     if (err) {
@@ -277,14 +289,14 @@ app.post('/api/menu', authenticateToken, (req, res) => {
 // Update menu item
 app.put('/api/menu/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
-  const { name, description, price, category, image, is_available } = req.body;
+  const { name, description, price, category, image, is_available, is_favorite } = req.body;
 
   if (!name || !price) {
     return res.status(400).json({ message: 'Name and price are required' });
   }
 
-  const query = 'UPDATE menu SET name = ?, description = ?, price = ?, category = ?, image = ?, is_available = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
-  const values = [name, description || '', price, category || 'coffee', image || null, is_available !== undefined ? is_available : true, id];
+  const query = 'UPDATE menu SET name = ?, description = ?, price = ?, category = ?, image = ?, is_available = ?, is_favorite = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
+  const values = [name, description || '', price, category || 'coffee', image || null, is_available !== undefined ? is_available : true, is_favorite !== undefined ? is_favorite : false, id];
 
   db.query(query, values, (err, result) => {
     if (err) {

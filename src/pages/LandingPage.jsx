@@ -207,10 +207,7 @@ const LandingPage = () => {
                     <span className="text-2xl font-bold text-primary">
                       Rp {item.price ? Math.floor(item.price).toLocaleString('id-ID').replace(/,/g, '.') : '0'}
                     </span>
-                    <div className="flex items-center">
-                      <Star className="text-yellow-400 fill-current" size={16} />
-                      <span className="ml-1 text-sm text-gray-600">5.0</span>
-                    </div>
+                    
                   </div>
                 </div>
               </div>

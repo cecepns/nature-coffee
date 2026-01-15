@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import apiService from '../utils/api';
 
 const MenuPage = () => {
@@ -14,7 +14,7 @@ const MenuPage = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const response = await apiService.menu.getAllPublic(200);
+        const response = await apiService.menu.getAllPublicMenus(200);
         setMenuItems(response.data || []);
       } catch (error) {
         console.error('Error fetching menu:', error);
@@ -166,10 +166,7 @@ const MenuPage = () => {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="text-xl font-semibold text-gray-900">{item.name}</h3>
-                    <div className="flex items-center">
-                      <Star className="text-yellow-400 fill-current" size={16} />
-                      <span className="ml-1 text-sm text-gray-600">5.0</span>
-                    </div>
+                    
                   </div>
                   
                   <p className="text-gray-600 mb-4 text-sm leading-relaxed line-clamp-2">
